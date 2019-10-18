@@ -56,7 +56,36 @@ class Node:
     # removes the first appearance of the value from the tree
     # returns the new root node
     def remove(self,val):
-        pass
+        if self.val == val:
+            weights = self.getWeights()
+            if self.left and weights[0] >= weights[1]:
+                nextSmallestLargest = self.left.detachLargestDescFromRight(self)
+                nextSmallestLargest.left = self.left
+                nextSmallestLargest.right = self.right
+                nextSmallestLargest.adjustHeight()
+                return nextSmallestLargest.checkbalance()
+            elif self.right:
+                nextLargestSmallest = self.right.detachSmallestDescFromLeft(self)
+                nextLargestSmallest.left = self.left
+                nextLargestSmallest.right = self.right
+                nextLargestSmallest.adjustHeight()
+                return nextLargestSmallest.checkbalance()
+            else:
+                return None
+        elif self.val > val:
+            if self.left:
+                self.left = self.left.remove(val)
+                self.adjustHeight()
+                return self.checkbalance()
+            else:
+                return self
+        elif self.val < val:
+            if self.right:
+                self.right = self.right.remove(val)
+                self.adjustHeight()
+                return self.checkbalance()
+            else:
+                return self
 
     # returns root node of subtree
     def checkbalance(self):
@@ -74,6 +103,27 @@ class Node:
             return self.pivotLeft()
         else:
             return self
+
+    # returns a pair of numbers representing the left [0] and right [1] subtree weights
+    # work weight into Node to reduce runtime complexity
+    def getWeights(self):
+        leftWeight = 0
+        rightWeight = 0
+        if self.left:
+            leftWeight = self.left.getWeight()
+        if self.right:
+            rightWeight = self.right.getWeight()
+        return (leftWeight, rightWeight)
+    
+    # singular method, returns total number of nodes in this subtree
+    # work weight into Node to reduce runtime complexity
+    def getWeight(self):
+        weight = 1
+        if self.left:
+            weight += self.left.getWeight()
+        if self.right:
+            weight += self.right.getWeight()
+        return weight
 
     # returns leftHeight - rightHeight
     def heightDiff(self):
