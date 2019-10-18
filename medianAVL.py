@@ -46,6 +46,7 @@ class Node:
         self.right = None
         # book keeping on height to reduce runtime complexity
         self.height = 0
+        self.weight = 1
 
     # mutate self to reflect the appropriate height
     # assumes child nodes are correct
@@ -60,6 +61,25 @@ class Node:
             rH = -1
         self.height = 1 + max(lH,rH)
 
+    # mutates self to reflect weight of this subtree
+    # asssumes child nodes are correct
+    def adjustWeight(self):
+        if self.left:
+            lW = self.left.weight
+        else:
+            lW = 0
+        if self.right:
+            rW = self.right.weight
+        else:
+            rW = 0
+        self.weight = 1 + lW + rW
+
+        
+    # Adjust both height and weight
+    def adjustHeightAndWeight(self):
+        self.adjustHeight()
+        self.adjustWeight()
+
     # must return the node rooted at the original location
     # in case it has changed
     def add(self,val):
@@ -73,7 +93,7 @@ class Node:
                 self.right = self.right.add(val)
             else:
                 self.right = Node(val)
-        self.adjustHeight()
+        self.adjustHeightAndWeight()
         return self.checkbalance()
 
     # removes the first appearance of the value from the tree
@@ -85,27 +105,27 @@ class Node:
                 nextSmallestLargest = self.left.detachLargestDescFromRight(self)
                 nextSmallestLargest.left = self.left
                 nextSmallestLargest.right = self.right
-                nextSmallestLargest.adjustHeight()
+                nextSmallestLargest.adjustHeightAndWeight()
                 return nextSmallestLargest.checkbalance()
             elif self.right:
                 nextLargestSmallest = self.right.detachSmallestDescFromLeft(self)
                 nextLargestSmallest.left = self.left
                 nextLargestSmallest.right = self.right
-                nextLargestSmallest.adjustHeight()
+                nextLargestSmallest.adjustHeightAndWeight()
                 return nextLargestSmallest.checkbalance()
             else:
                 return None
         elif self.val > val:
             if self.left:
                 self.left = self.left.remove(val)
-                self.adjustHeight()
+                self.adjustHeightAndWeight()
                 return self.checkbalance()
             else:
                 return self
         elif self.val < val:
             if self.right:
                 self.right = self.right.remove(val)
-                self.adjustHeight()
+                self.adjustHeightAndWeight()
                 return self.checkbalance()
             else:
                 return self
@@ -166,12 +186,7 @@ class Node:
     # singular method, returns total number of nodes in this subtree
     # work weight into Node to reduce runtime complexity
     def getWeight(self):
-        weight = 1
-        if self.left:
-            weight += self.left.getWeight()
-        if self.right:
-            weight += self.right.getWeight()
-        return weight
+        return self.weight
 
     # returns leftHeight - rightHeight
     def heightDiff(self):
@@ -190,8 +205,8 @@ class Node:
         right = self.right
         self.right = right.left
         right.left = self
-        self.adjustHeight()
-        right.adjustHeight()
+        self.adjustHeightAndWeight()
+        right.adjustHeightAndWeight()
         return right
 
     # perform node swapping, update height, return new root
@@ -199,8 +214,8 @@ class Node:
         left = self.left
         self.left = left.right
         left.right = self
-        self.adjustHeight()
-        left.adjustHeight()
+        self.adjustHeightAndWeight()
+        left.adjustHeightAndWeight()
         return left
 
     # call on child but provide self reference for update
@@ -208,13 +223,13 @@ class Node:
     def detachLargestDescFromRight(self,parent):
         if self.right:
             node = self.right.detachLargestDescFromLeft(self)
-            self.adjustHeight()
+            self.adjustHeightAndWeight()
             return node
         elif self.left:
             parent.left = self.left
         else:
             parent.left = None
-        parent.adjustHeight()
+        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -222,13 +237,13 @@ class Node:
     def detachLargestDescFromLeft(self,parent):
         if self.right:
             node = self.right.detachLargestDescFromLeft(self)
-            self.adjustHeight()
+            self.adjustHeightAndWeight()
             return node
         elif self.left:
             parent.right = self.left
         else:
             parent.right = None
-        parent.adjustHeight()
+        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -236,13 +251,13 @@ class Node:
     def detachSmallestDescFromLeft(self,parent):
         if self.left:
             node = self.left.detachSmallestDescFromRight(self)
-            self.adjustHeight()
+            self.adjustHeightAndWeight()
             return node
         elif self.right:
             parent.right = self.right
         else:
             parent.right = None
-        parent.adjustHeight()
+        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -250,13 +265,13 @@ class Node:
     def detachSmallestDescFromRight(self,parent):
         if self.left:
             node = self.left.detachSmallestDescFromRight(self)
-            self.adjustHeight()
+            self.adjustHeightAndWeight()
             return node
         elif self.right:
             parent.left = self.right
         else:
             parent.left = None
-        parent.adjustHeight()
+        parent.adjustHeightAndWeight()
         return self
 
 def median(a,x,o):
