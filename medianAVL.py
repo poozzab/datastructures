@@ -107,6 +107,31 @@ class Node:
             else:
                 return self
 
+    # check if value is contained within the AVL
+    def contains(self,val):
+        if self.val == val:
+            return True
+        elif self.left and self.val > val:
+            return self.left.contains(val)
+        elif self.right and self.val < val:
+            return self.right.contains(val)
+        else:
+            return False
+
+    # Search for the largest value in this subtree and return it
+    def findLargest(self):
+        if self.right:
+            return self.right.findLargest()
+        else:
+            return self.val
+
+    # search for the smallest value in this subtree and return it
+    def findSmallest(self):
+        if self.left:
+            return self.left.findSmallest()
+        else:
+            return self.val
+
     # returns root node of subtree
     def checkbalance(self):
         diff = self.heightDiff()
