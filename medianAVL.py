@@ -1,4 +1,7 @@
 #!/bin/python
+
+from decimal import Decimal
+
 # A balanced tree designed to handle quick addition and removal and median calculation
 class AVL:
     def __init__(self,rootNode=None):
@@ -264,9 +267,12 @@ def median(a,x,o):
         elif a[i] is 'r':
             tree.remove(x[i],o)
 
-        median = tree.calculateRawMedian()
+        median = Decimal(tree.calculateRawMedian())
         if median is not None:
-            o.write("{}".format(median)+"\n")
+            if median == median.to_integral():
+                o.write(str(median.to_integral())+"\n")
+            else:
+                o.write(str(median)+"\n")
 
 with open('testInput1.txt') as f:
     with open('testOutput1.txt','w') as o:
