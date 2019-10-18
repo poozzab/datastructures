@@ -11,10 +11,30 @@ class AVL:
             self.root = Node(val)
 
     def remove(self,val,o):
-        self.root = self.root.remove(val)
+        if self.root is not None:
+            if not self.root.contains( val ):
+                o.write("Wrong!\n")
+            else:
+                self.root = self.root.remove(val)
+                if self.root is None:
+                    o.write("Wrong!\n")
+        elif self.root is None:
+            o.write("Wrong!\n")
 
     def calculateRawMedian(self):
-        pass
+        if self.root:
+            weights = self.root.getWeights()
+            if weights[0] == weights[1]:
+                return self.root.val
+            elif weights[0] > weights[1]:
+                leftLargest = self.root.left.findLargest()
+                return ((self.root.val + leftLargest) / 2.0)
+            else:
+                rightSmallest = self.root.right.findSmallest()
+                val = ((self.root.val + rightSmallest) / 2.0 )
+                return val
+        else:
+            return None
 
 class Node:
     def __init__(self,val):
@@ -210,3 +230,27 @@ class Node:
             parent.left = None
         parent.adjustHeight()
         return self
+
+def median(a,x,o):
+    tree = AVL()
+    for i in range(0,len(a)):
+        if a[i] is 'a':
+            tree.add(x[i])
+        elif a[i] is 'r':
+            tree.remove(x[i],o)
+
+        median = tree.calculateRawMedian()
+        if median is not None:
+            o.write("{}".format(median)+"\n")
+
+with open('testInput1.txt') as f:
+    with open('testOutput1.txt','w') as o:
+        N = int(f.readline())
+        s = []
+        x = []
+        for i in range(0, N):
+            tmp = f.readline().strip().split(' ')
+            a, b = [xx for xx in tmp]
+            s.append(a)
+            x.append(int(b))
+        median(s,x,o)
