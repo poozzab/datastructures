@@ -32,7 +32,14 @@ class AVL:
     def calculateRawMedian(self):
         if self.root:
             weights = self.root.getWeights()
-            if weights[0] == weights[1]:
+            if self.root.weight % 2 == 1:
+                if weights[0] > weights[1]:
+                    return self.root.left.findLargest()
+                elif weights[1] > weights[0]:
+                    return self.root.right.findSmallest()
+                else:
+                    return self.root.val
+            elif weights[0] == weights[1]:
                 return self.root.val
             elif weights[0] > weights[1]:
                 leftLargest = self.root.left.findLargest()
@@ -43,6 +50,12 @@ class AVL:
                 return val
         else:
             return None
+
+    def emit(self):
+        if self.root:
+            print("begin tree")
+            self.root.emit()
+            print("end tree")
 
 class Node:
     def __init__(self,val):
@@ -162,15 +175,15 @@ class Node:
 
     # returns root node of subtree
     def checkbalance(self):
-        diff = self.heightDiff()
+        diff = self.weightDiff()
         # if left - right > 1, too many on left
         if diff > 1:
-            leftDiff = self.left.heightDiff()
+            leftDiff = self.left.weightDiff()
             if leftDiff < 0:
                 self.left = self.left.pivotLeft()
             return self.pivotRight()
         elif diff < -1:
-            rightDiff = self.right.heightDiff()
+            rightDiff = self.right.weightDiff()
             if rightDiff > 0:
                 self.right = self.right.pivotRight()
             return self.pivotLeft()
@@ -204,6 +217,17 @@ class Node:
         else:
             rH = -1
         return lH - rH
+
+    def weightDiff(self):
+        if self.left:
+            lW = self.left.weight
+        else:
+            lW = 0
+        if self.right:
+            rW = self.right.weight
+        else:
+            rW = 0
+        return lW - rW
 
     # perform node swapping, update heights, return new root
     def pivotLeft(self):
@@ -278,6 +302,13 @@ class Node:
             parent.left = None
         parent.adjustHeightAndWeight()
         return self
+
+    def emit(self):
+        if self.left:
+            self.left.emit()
+        print(" val " + str(self.val) + " h: " + str(self.height) + " w: " + str(self.weight))
+        if self.right:
+            self.right.emit()
 
 def median(a,x,o):
     tree = AVL()
