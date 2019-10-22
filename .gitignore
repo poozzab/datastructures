@@ -1,2 +1,4 @@
-testOutput0.txt
-testOutput1.txt
+testOutput*.txt
+testInput*.txt
+testAnswer*.txt
+results.txt

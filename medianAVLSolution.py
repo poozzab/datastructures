@@ -1,5 +1,5 @@
 #!/bin/python
-import sys
+
 from decimal import Decimal
 
 # A balanced tree designed to handle quick addition and removal and median calculation
@@ -14,19 +14,19 @@ class AVL:
             self.root = Node(val)
 
     # returns boolean indicating if median should be printed
-    def remove(self,val,o):
+    def remove(self,val):
         if self.root is not None:
             if not self.root.contains( val ):
-                o.write("Wrong!\n")
+                print("Wrong!")
                 return False
             else:
                 self.root = self.root.remove(val)
                 if self.root is None:
-                    o.write("Wrong!\n")
+                    print("Wrong!")
                     return False
             return True
         elif self.root is None:
-            o.write("Wrong!\n")
+            print("Wrong!")
             return False
 
     def calculateRawMedian(self):
@@ -310,36 +310,29 @@ class Node:
         if self.right:
             self.right.emit()
 
-def median(a,x,o):
+def median(a,x):
     tree = AVL()
     for i in range(0,len(a)):
         shouldPrintMedian = True
         if a[i] is 'a':
             tree.add(x[i])
         elif a[i] is 'r':
-            shouldPrintMedian = tree.remove(x[i],o)
+            shouldPrintMedian = tree.remove(x[i])
 
         if shouldPrintMedian:
             median = Decimal(tree.calculateRawMedian())
             if median is not None:
                 if median == median.to_integral():
-                    o.write(str(median.to_integral())+"\n")
+                    print(str(median.to_integral()))
                 else:
-                    o.write(str(median)+"\n")
+                    print(str(median))
 
-if len(sys.argv) < 2:
-    print("Failure: please provide number of input file")
-    print("Expecting existence of file named 'testInput#.txt'")
-    exit()
-
-with open('testInput' + str(sys.argv[1]) + '.txt', 'r') as f:
-    with open('testOutput' + str(sys.argv[1]) + '.txt','w') as o:
-        N = int(f.readline())
-        s = []
-        x = []
-        for i in range(0, N):
-            tmp = f.readline().strip().split(' ')
-            a, b = [xx for xx in tmp]
-            s.append(a)
-            x.append(int(b))
-        median(s,x,o)
+N = int(input())
+s = []
+x = []
+for i in range(0, N):
+   tmp = input().strip().split(' ')
+   a, b = [xx for xx in tmp]
+   s.append(a)
+   x.append(int(b))
+median(s,x)
