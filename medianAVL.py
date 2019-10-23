@@ -182,12 +182,12 @@ class Node:
         # if left - right > 1, too many on left
         if diff > 1:
             leftDiff = self.left.weightDiff()
-            if leftDiff < 0:
+            if leftDiff <= 0:
                 self.left = self.left.pivotLeft()
             return self.pivotRight()
         elif diff < -1:
             rightDiff = self.right.weightDiff()
-            if rightDiff > 0:
+            if rightDiff >= 0:
                 self.right = self.right.pivotRight()
             return self.pivotLeft()
         else:
@@ -261,7 +261,6 @@ class Node:
             parent.left = self.left
         else:
             parent.left = None
-        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -275,7 +274,6 @@ class Node:
             parent.right = self.left
         else:
             parent.right = None
-        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -289,7 +287,6 @@ class Node:
             parent.right = self.right
         else:
             parent.right = None
-        parent.adjustHeightAndWeight()
         return self
 
     # call on child but provide self reference for update
@@ -303,7 +300,6 @@ class Node:
             parent.left = self.right
         else:
             parent.left = None
-        parent.adjustHeightAndWeight()
         return self
 
     def emit(self):
