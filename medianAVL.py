@@ -1,5 +1,7 @@
 #!/bin/python
 import sys
+import os.path
+from os import path
 from decimal import Decimal
 
 # A balanced tree designed to handle quick addition and removal and median calculation
@@ -319,6 +321,9 @@ def median(a,x,o):
         elif a[i] is 'r':
             shouldPrintMedian = tree.remove(x[i],o)
 
+        if i in [23,27,29]:
+            tree.emit()
+
         if shouldPrintMedian:
             median = Decimal(tree.calculateRawMedian())
             if median is not None:
@@ -330,6 +335,10 @@ def median(a,x,o):
 if len(sys.argv) < 2:
     print("Failure: please provide number of input file")
     print("Expecting existence of file named 'testInput#.txt'")
+    exit()
+
+if not path.exists('testInput{0}.txt'.format(sys.argv[1])):
+    print("Test file testInput{0}.txt does not exist! Aborting.".format(sys.argv[1]))
     exit()
 
 with open('testInput' + str(sys.argv[1]) + '.txt', 'r') as f:

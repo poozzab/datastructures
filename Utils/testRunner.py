@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
+
 import sys
+import os.path
+from os import path
 from termcolor import colored
 
 infoKeywords = ["man","info","help","h","-h"]
@@ -32,6 +36,10 @@ for i in range(0,len(sys.argv)):
 if actFileName is "" or expFileName is "":
     print(expUseErrorMsg)
     print( "Was provided: " + str(sys.argv))
+    exit()
+
+if not ( path.exists(actFileName) and path.exists(expFileName) ):
+    print("One of the specified files does not exist. Aborting.")
     exit()
 
 numErrors = 0
