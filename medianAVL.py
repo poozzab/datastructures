@@ -322,9 +322,6 @@ def median(a,x,o):
         elif a[i] is 'r':
             shouldPrintMedian = tree.remove(x[i],o)
 
-        if i in [23,27,29]:
-            tree.emit()
-
         if shouldPrintMedian:
             median = Decimal(tree.calculateRawMedian())
             if median is not None:
