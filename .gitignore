@@ -2,3 +2,4 @@ testOutput*.txt
 testInput*.txt
 testAnswer*.txt
 results.txt
+treeDebugSteps.txt

@@ -54,11 +54,17 @@ class AVL:
         else:
             return None
 
-    def emit(self):
+    def emit(self,out=None):
         if self.root:
-            print("begin tree")
-            self.root.emit()
-            print("end tree")
+            if out:
+                out.write("begin tree\n")
+            else:
+                print("begin tree")
+            self.root.emit(out)
+            if out:
+                out.write("end tree\n")
+            else:
+                print("end tree")
 
 class Node:
     def __init__(self,val):
@@ -302,21 +308,33 @@ class Node:
             parent.left = None
         return self
 
-    def emit(self):
+    def emit(self,out=None):
         if self.left:
-            self.left.emit()
-        print(" val " + str(self.val) + " h: " + str(self.height) + " w: " + str(self.weight))
+            self.left.emit(out)
+        if out:
+            out.write(" val " + str(self.val) + " h: " + str(self.height) + " w: " + str(self.weight)+"\n")
+        else:
+            print(" val " + str(self.val) + " h: " + str(self.height) + " w: " + str(self.weight))
         if self.right:
-            self.right.emit()
+            self.right.emit(out)
+
+debugSteps = []
 
 def median(a,x,o):
     tree = AVL()
+    out = None
+    if len(debugSteps) > 0:
+        out = open("treeDebugSteps.txt","w")
     for i in range(0,len(a)):
         shouldPrintMedian = True
         if a[i] is 'a':
             tree.add(x[i])
         elif a[i] is 'r':
             shouldPrintMedian = tree.remove(x[i],o)
+
+        if i in debugSteps:
+            out.write("Action: {0} {1}\n".format(a[i],x[i]))
+            tree.emit(out)
 
         if shouldPrintMedian:
             median = Decimal(tree.calculateRawMedian())
@@ -325,6 +343,8 @@ def median(a,x,o):
                     o.write(str(median.to_integral())+"\n")
                 else:
                     o.write(str(median)+"\n")
+    if out:
+        out.close()
 
 if len(sys.argv) < 2:
     print("Failure: please provide number of input file")
