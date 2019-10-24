@@ -262,6 +262,7 @@ class Node:
         if self.right:
             node = self.right.detachLargestDescFromLeft(self)
             self.adjustHeightAndWeight()
+            parent.left = self.checkbalance()
             return node
         elif self.left:
             parent.left = self.left
@@ -275,6 +276,7 @@ class Node:
         if self.right:
             node = self.right.detachLargestDescFromLeft(self)
             self.adjustHeightAndWeight()
+            parent.right = self.checkbalance()
             return node
         elif self.left:
             parent.right = self.left
@@ -288,6 +290,7 @@ class Node:
         if self.left:
             node = self.left.detachSmallestDescFromRight(self)
             self.adjustHeightAndWeight()
+            parent.right = self.checkbalance()
             return node
         elif self.right:
             parent.right = self.right
@@ -301,6 +304,7 @@ class Node:
         if self.left:
             node = self.left.detachSmallestDescFromRight(self)
             self.adjustHeightAndWeight()
+            parent.left = self.checkbalance()
             return node
         elif self.right:
             parent.left = self.right
