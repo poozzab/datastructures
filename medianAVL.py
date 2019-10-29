@@ -12,7 +12,67 @@ class AVL:
 
     def add(self,val):
         if self.root:
-            self.root = self.root.add(val)
+            weights = self.root.getWeights()
+            if self.root.val > val and weights[0] > weights[1]:
+                # if val to add is smaller than root
+                # but there are more smaller nodes
+                # check if this is the new median
+                # if so, val is the new root, move current root to the right
+                # if not the median, detach largest smaller than root
+                # make that the new root
+                # add root to the right
+                # then add this val to the left
+                largestSmallerThanMedian = self.root.left.findLargest()
+                # if val isn't between root and this, make largestSmaller
+                # the new root, add root val to right, add val to left
+                if val < largestSmallerThanMedian:
+                    detachedNode = self.root.left.detachLargestDescFromRight(self.root)
+                    detachedNode.left = self.root.left
+                    detachedNode.right = self.root.right
+                    if detachedNode.right:
+                        detachedNode.right = detachedNode.right.add(self.root.val)
+                    else:
+                        detachedNode.right = Node(self.root.val)
+                    detachedNode.left = detachedNode.left.add(val)
+                    detachedNode.adjustHeightAndWeight()
+                    self.root = detachedNode.checkbalance()
+                # the val is between the leftLargest and root
+                # make val the new root and add root to the right
+                else:
+                    newRoot = Node(val)
+                    newRoot.left = self.root.left
+                    newRoot.right = self.root.right
+                    if newRoot.right:
+                        newRoot.right = newRoot.right.add(self.root.val)
+                    else:
+                        newRoot.right = Node(self.root.val)
+                    newRoot.adjustHeightAndWeight()
+                    self.root = newRoot.checkbalance()
+            elif self.root.val < val and weights[0] < weights[1]:
+                smallestLargerThanMedian = self.root.right.findSmallest()
+                if val > smallestLargerThanMedian:
+                    detachedNode = self.root.right.detachSmallestDescFromLeft(self.root)
+                    detachedNode.left = self.root.left
+                    detachedNode.right = self.root.right
+                    if detachedNode.left:
+                        detachedNode.left = detachedNode.left.add(self.root.val)
+                    else:
+                        detachedNode.left = Node(self.root.val)
+                    detachedNode.right = detachedNode.right.add(val)
+                    detachedNode.adjustHeightAndWeight()
+                    self.root = detachedNode.checkbalance()
+                else:
+                    newRoot = Node(val)
+                    newRoot.left = self.root.left
+                    newRoot.right = self.root.right
+                    if newRoot.left:
+                        newRoot.left = newRoot.left.add(self.root.val)
+                    else:
+                        newRoot.left = Node(self.root.val)
+                    newRoot.adjustHeightAndWeight()
+                    self.root = newRoot.checkbalance()
+            else:
+                self.root = self.root.add(val)
         else:
             self.root = Node(val)
 
@@ -36,13 +96,6 @@ class AVL:
         if self.root:
             weights = self.root.getWeights()
             if self.root.weight % 2 == 1:
-                if weights[0] > weights[1]:
-                    return self.root.left.findLargest()
-                elif weights[1] > weights[0]:
-                    return self.root.right.findSmallest()
-                else:
-                    return self.root.val
-            elif weights[0] == weights[1]:
                 return self.root.val
             elif weights[0] > weights[1]:
                 leftLargest = self.root.left.findLargest()
@@ -110,7 +163,21 @@ class Node:
     # must return the node rooted at the original location
     # in case it has changed
     def add(self,val):
-        if self.val >= val:
+        if self.val == val:
+            # since this AVL is balanced by weight,
+            # add to the smaller side if values are equal
+            weights = self.getWeights()
+            if weights[0] <= weights[1]:
+                if self.left:
+                    self.left = self.left.add(val)
+                else:
+                    self.left = Node(val)
+            else:
+                if self.right:
+                    self.right = self.right.add(val)
+                else:
+                    self.right = Node(val)
+        elif self.val > val:
             if self.left:
                 self.left = self.left.add(val)
             else:

@@ -3,3 +3,4 @@ testInput*.txt
 testAnswer*.txt
 results.txt
 treeDebugSteps.txt
+__pycache__
