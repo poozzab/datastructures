@@ -1,37 +1,42 @@
 #!/usr/bin/env python3
 
+import unittest
 from bfMazeSolver import Maze
 
-grid0 = [['x','x','x','x','x'],
-         ['x',' ',' ',' ','x'],
-         ['x',' ','x',' ','x'],
-         ['x',' ','x',' ','x'],
-         ['x','x',' ',' ','x'],
-         ['x','x',' ','x','x'],
-         ['x',' ',' ',' ','x'],
-         ['x','x','x',' ','x']]
-grid0Start = (1,1)
+class TestMazeSolver(unittest.TestCase):
+    def test_mazeWithPathToExit_findsExit(self):
+        grid = [['x','x','x','x','x'],
+                ['x',' ',' ',' ','x'],
+                ['x',' ','x',' ','x'],
+                ['x',' ','x',' ','x'],
+                ['x','x',' ',' ','x'],
+                ['x','x',' ','x','x'],
+                ['x',' ',' ',' ','x'],
+                ['x','x','x',' ','x']]
+        gridStart = (1,1)
+        expectedPath = [gridStart,(2,1),(3,1),(3,2),(3,3),(3,4),(2,4),(2,5),(2,6),(3,6),(3,7)]
 
-expectedPath0 = [grid0Start,(2,1),(3,1),(3,2),(3,3),(3,4),(2,4),(2,5),(2,6),(3,6),(3,7)]
+        maze = Maze(gridStart,grid)
 
-maze = Maze(grid0Start,grid0)
-actualPath0 = maze.solve()
-print("Expected Path for Maze0 == Actual Path: " + str(expectedPath0==actualPath0))
-print(actualPath0)
+        actualPath = maze.solve()
+        self.assertEqual(actualPath, expectedPath)
 
-grid1 = [['x','x','x','x','x'],
-         ['x',' ',' ',' ','x'],
-         ['x',' ','x',' ','x'],
-         ['x',' ','x','x','x'],
-         ['x','x',' ',' ','x'],
-         ['x','x',' ','x','x'],
-         ['x',' ',' ',' ','x'],
-         ['x','x','x',' ','x']]
-grid1Start = (1,1)
+    def test_mazeWithoutPathToExit_emptyPath(self):
+        grid = [['x','x','x','x','x'],
+                ['x',' ',' ',' ','x'],
+                ['x',' ','x',' ','x'],
+                ['x',' ','x','x','x'],
+                ['x','x',' ',' ','x'],
+                ['x','x',' ','x','x'],
+                ['x',' ',' ',' ','x'],
+                ['x','x','x',' ','x']]
+        gridStart = (1,1)
+        expectedPath = []
 
-maze1 = Maze(grid1Start,grid1)
-expectedPath1 = []
-actualPath1 = maze1.solve()
+        maze = Maze(gridStart,grid)
 
-print("Expected Path for Maze1 == Actual Path: " + str(expectedPath1 == actualPath1))
-print(actualPath1)
+        actualPath = maze.solve()
+        self.assertEqual(actualPath,expectedPath)
+
+if __name__=='__main__':
+    unittest.main()
