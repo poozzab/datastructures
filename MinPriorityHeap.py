@@ -12,6 +12,9 @@ class PriorityPair:
     def __eq__(self,obj):
         return isinstance(obj,PriorityPair) and self.priority == obj.priority and self.value == obj.value
 
+    def __repr__(self):
+        return "PriorityPair: priority=" + str(self.priority) + " value=" + self.value.__repr__()
+
 # min priority heap implementation that allows you to track objects with associated priorities
 class MinPriorityHeap:
     def __init__(self,heap=None):
@@ -24,6 +27,9 @@ class MinPriorityHeap:
 
     def __str__(self):
         return str(self.heap)
+
+    def __repr__(self):
+        return "MinPriorityHeap: heap=" + self.heap.__repr__()
 
     def peek(self):
         if len(self.heap)>0:
