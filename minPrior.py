@@ -10,10 +10,7 @@ class MinPriorQueue:
     def add(self,prior,value):
         for idx,val in enumerate(self.queue):
             if prior <= val.priority:
-                newQueue = self.queue[:idx]
-                newQueue.append(Node(prior,value))
-                newQueue.extend(self.queue[idx:])
-                self.queue = newQueue
+                self.queue = self.queue[:idx] + [Node(prior,value)] + self.queue[idx:]
                 return
         self.queue.append(Node(prior,value))
 
@@ -21,10 +18,7 @@ class MinPriorQueue:
     def addAll(self,prior,values):        
         for idx,val in enumerate(self.queue):
             if prior <= val.priority:
-                newQueue = self.queue[:idx]
-                newQueue.extend([Node(prior,value) for value in values])
-                newQueue.extend(self.queue[idx:])
-                self.queue = newQueue
+                self.queue = self.queue[:idx] + [Node(prior,value) for value in values] + self.queue[idx:]
                 return
         self.queue.extend([Node(prior,value) for value in values])
 

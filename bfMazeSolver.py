@@ -9,59 +9,39 @@ class Maze:
         self.start = start
         self.grid = grid
         self.correct_path = []
-        self.adjacentNodes = MinPriorQueue()
-        self.inQueueGrid = []
+        self.adjacentCells = MinPriorQueue()
+        self.parentCellDict = { start: start }
         self.solved = False
 
     def solve(self):
         if self.solved:
             return self.correct_path
-        self.inQueueGrid = []
-        for row in range(len(self.grid)):
-            self.inQueueGrid.append([])
-            for col in range(len(self.grid[row])):
-                self.inQueueGrid[row].append(False)
-        self.inQueueGrid[self.start[1]][self.start[0]] = self.start
-        self.adjacentNodes.add(0,self.start)
-        while not self.adjacentNodes.isEmpty():
-            node = self.adjacentNodes.pop()
-            if self.onEdge(*node.value):
-                node = node.value
-                while node != self.inQueueGrid[node[1]][node[0]]:
-                    self.correct_path.append(node)
-                    node = self.inQueueGrid[node[1]][node[0]]
-                self.correct_path.append(node)
+        self.adjacentCells.add(0,self.start)
+        while not self.adjacentCells.isEmpty():
+            cellNode = self.adjacentCells.pop()
+            if self.onEdge(*cellNode.value):
+                cell = cellNode.value
+                while cell in self.parentCellDict and cell != self.parentCellDict[cell]:
+                    self.correct_path.append(cell)
+                    cell = self.parentCellDict[cell]
+                self.correct_path.append(cell)
                 self.correct_path.reverse()
                 self.solved = True
                 return self.correct_path
-            self.addAdjacentNodes(*node.value,node.priority)
+            self.addAdjacentCells(*cellNode.value,cellNode.priority)
         self.solved = True
         return self.correct_path
 
-    def addAdjacentNodes(self,x,y,d):
-        thisNode = (x,y)
-        nodesToAdd = []
-        if self.isViable(*getUp(x,y)):
-            up = getUp(x,y)
-            nodesToAdd.append(up)
-            self.inQueueGrid[up[1]][up[0]] = thisNode
-        if self.isViable(*getDown(x,y)):
-            down = getDown(x,y)
-            nodesToAdd.append(down)
-            self.inQueueGrid[down[1]][down[0]] = thisNode
-        if self.isViable(*getLeft(x,y)):
-            left = getLeft(x,y)
-            nodesToAdd.append(left)
-            self.inQueueGrid[left[1]][left[0]] = thisNode
-        if self.isViable(*getRight(x,y)):
-            right = getRight(x,y)
-            nodesToAdd.append(right)
-            self.inQueueGrid[right[1]][right[0]] = thisNode
-        self.adjacentNodes.addAll(d+1,nodesToAdd)
+    def addAdjacentCells(self,x,y,d):
+        thisCell = (x,y)
+        viableCells = list(filter(lambda n: self.isViable(*n), [getUp(x,y),getDown(x,y),getLeft(x,y), getRight(x,y)]))
+        for cell in viableCells:
+            self.parentCellDict[cell] = thisCell
+        self.adjacentCells.addAll(d+1,viableCells)
         
 
     def isViable(self,x,y):
-        return self.isOpen(x,y) and not self.inQueueGrid[y][x]
+        return self.isOpen(x,y) and not (x,y) in self.parentCellDict
 
     def onEdge(self,x,y):
         return x == 0 or y == 0 or x == len(self.grid[0])-1 or y == len(self.grid)-1
