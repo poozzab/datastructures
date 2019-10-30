@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from minPrior import MinPriorQueue
+from MinPriorityHeap import MinPriorityHeap
 
 wall = 'x'
 
@@ -9,7 +10,7 @@ class Maze:
         self.start = start
         self.grid = grid
         self.correct_path = []
-        self.adjacentCells = MinPriorQueue()
+        self.adjacentCells = MinPriorityHeap()
         self.parentCellDict = { start: start }
         self.solved = False
 
@@ -18,7 +19,7 @@ class Maze:
             return self.correct_path
         self.adjacentCells.add(0,self.start)
         while not self.adjacentCells.isEmpty():
-            cellNode = self.adjacentCells.pop()
+            cellNode = self.adjacentCells.popWithPriority()
             if self.onEdge(*cellNode.value):
                 cell = cellNode.value
                 while cell in self.parentCellDict and cell != self.parentCellDict[cell]:

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# Simple Min Heap implementation that works primarily with numeric values
 class MinHeap:
     def __init__(self,heap=None):
         self.heap = heap if heap is not None else []
@@ -8,7 +9,7 @@ class MinHeap:
         return isinstance(obj,MinHeap) and self.heap == obj.heap
 
     def __str__(self):
-        return self.heap.__str__()
+        return str(self.heap)
 
     def peek(self):
         if len(self.heap)>0:

@@ -80,6 +80,13 @@ class MinHeapTest(unittest.TestCase):
         expectedMinHeap = MinHeap([1,5,3])
         self.assertEqual(actualMinHeap, expectedMinHeap)
 
+    def test_minheapify_rootLargest_bubblesRootToBottom(self):
+        actualMinHeap = MinHeap([14,9,10,13,11,12])
+        actualMinHeap.minheapify(0)
+
+        expectedMinHeap = MinHeap([9,11,10,13,14,12])
+        self.assertEqual(actualMinHeap,expectedMinHeap)
+
 
 
 if __name__ == '__main__':
