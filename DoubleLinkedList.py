@@ -71,7 +71,8 @@ class DoubleLinkedList:
                 replacementValueNode.next.prev = replacementValueNode
         return replacementValueNode
 
-
+    def isEmpty(self):
+        return self.root is None
 
 
 class DoubleLinkedNode:

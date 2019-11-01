@@ -51,6 +51,8 @@ class FibonacciHeap:
 
     # O(n)
     def updateMin(self):
+        if self.trees.isEmpty():
+            return
         listNode = self.trees.root.next
         self.min = self.trees.root
         while listNode:
@@ -65,7 +67,7 @@ class MinHeap:
     def __init__(self, value, children=None):
         self.value = value
         self.children = children if children is not None else list()
-        self.rank = len(children) if children is not None else 0
+        self.rank = len(children) if children is not None and isinstance(children,list) else 0
         self.marked = False
 
     def addSubtree(self,subTree):
