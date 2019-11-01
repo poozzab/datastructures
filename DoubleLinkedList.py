@@ -3,6 +3,7 @@
 class DoubleLinkedList:
     def __init__(self):
         self.root = None
+        self._itr = None
 
     def __eq__(self,obj):
         if isinstance(obj,DoubleLinkedList):
@@ -73,6 +74,17 @@ class DoubleLinkedList:
 
     def isEmpty(self):
         return self.root is None
+
+    def __iter__(self):
+        self._itr = self.root
+        return self
+
+    def __next__(self):
+        if self._itr is None:
+            raise StopIteration
+        node = self._itr
+        self._itr = self._itr.next
+        return node
 
 
 class DoubleLinkedNode:

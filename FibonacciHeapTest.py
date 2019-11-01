@@ -54,52 +54,6 @@ class FibonacciHeapTest(unittest.TestCase):
         expectedFibHeap.updateMin()
 
         self.assertEqual(fibHeap,expectedFibHeap)
-        
-    def test_dllreplaceWith_replaceValueNotExist_doesNothing(self):
-        dll = DoubleLinkedList()
-        dll.add(1)
-        node = dll.replaceWith(1,2)
-
-        expectedDll = DoubleLinkedList()
-        expectedDll.add(1)
-        self.assertEqual(dll,expectedDll)
-        self.assertIsNone(node)
-
-    def test_dllreplaceWith_replaceValueExistsReplacementValueDoesnt_doesNothing(self):
-        dll = DoubleLinkedList()
-        dll.add(1)
-        dll.add(2)
-        dll.add(3)
-
-        node = dll.replaceWith(4,2)
-
-        expectedDll = DoubleLinkedList()
-        expectedDll.add(1)
-        expectedDll.add(2)
-        expectedDll.add(3)
-        expectedNode = DoubleLinkedNode(2,None)
-
-        self.assertEqual(dll,expectedDll)
-        self.assertEqual(node,expectedNode)
-
-    def test_dllreplaceWith_bothExists_replacesValue(self):
-        dll = DoubleLinkedList()
-        dll.add(1)
-        dll.add(2)
-        dll.add(3)
-        dll.add(4)
-
-        node = dll.replaceWith(4,2)
-
-        expectedDll = DoubleLinkedList()
-        expectedDll.add(1)
-        expectedDll.add(3)
-        expectedDll.add(2)
-
-        expectedNode = DoubleLinkedNode(2,None)
-
-        self.assertEqual(dll,expectedDll)
-        self.assertEqual(node,expectedNode)
 
 if __name__ == '__main__':
     unittest.main()
