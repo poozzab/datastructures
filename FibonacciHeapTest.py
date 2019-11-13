@@ -55,5 +55,28 @@ class FibonacciHeapTest(unittest.TestCase):
 
         self.assertEqual(fibHeap,expectedFibHeap)
 
+    def test_consolidateTrees_twoNodesEqualRank_reparentsFirstNode(self):
+        seven = MinHeap(7)
+        three = MinHeap(3)
+
+        actualHeap = FibonacciHeap()
+        actualHeap.insert(seven)
+        actualHeap.insert(three)
+
+        expectedParentsBeforeConsolidate = {three: None, seven: None}
+
+        self.assertEqual(expectedParentsBeforeConsolidate, actualHeap.parents)
+
+        actualHeap.consolidateTrees()
+
+        expectedParentsAfterConsolidate = {three: None, seven: three}
+        self.assertEqual(actualHeap.parents, expectedParentsAfterConsolidate)
+
+        threeThenSeven = MinHeap(3,[MinHeap(7)])
+        expectedHeap = FibonacciHeap()
+        expectedHeap.insert(threeThenSeven)
+
+        self.assertEqual(actualHeap, expectedHeap)
+
 if __name__ == '__main__':
     unittest.main()

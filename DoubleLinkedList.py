@@ -16,6 +16,10 @@ class DoubleLinkedList:
                 rightNode = rightNode.next
         else:
             return False
+        # edge case: we were iterating and there are still nodes
+        # left in one of the two DLLs
+        if leftNode or rightNode:
+            return False
         return True
 
     def __str__(self):

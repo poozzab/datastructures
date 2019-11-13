@@ -6,27 +6,38 @@ class FibonacciHeap:
     def __init__(self):
         self.trees = DoubleLinkedList()
         self.min = None
+        # maps a node to its parent node for quick lookup
+        self.parents = dict()
 
     def __eq__(self,obj):
         return isinstance(obj,FibonacciHeap) and self.min == obj.min and self.trees == obj.trees
 
     def insert(self,value):
+        if not isinstance(value, MinHeap):
+            value = MinHeap(value)
         newNode = self.trees.add(value)
+        self.parents[newNode.value] = None
         # self.min.value is expected to be a node in a tree
         # with a value property representing its key
         if self.min:
-            if self.min.value.value > value:
+            if self.min.value.value > value.value:
                 self.min = newNode
         else:
             self.min = newNode
 
     def quickInsert(self,value):
-        self.trees.add(value)
+        if not isinstance(value, MinHeap):
+            value = MinHeap(value)
+        newNode = self.trees.add(value)
+        self.parents[newNode.value] = None
 
     def deleteMin(self):
         children = self.min.value.children
         for child in children:
             self.quickInsert(child)
+            self.parents[child] = None
+        if self.parents[self.min.value]:
+            self.parents.pop(self.min.value)
         self.trees.remove(self.min.value.value)
         self.updateMin()
         self.consolidateTrees()
@@ -41,9 +52,11 @@ class FibonacciHeap:
                 if currNode.value.value < sameRankNode.value.value:
                     currNode.value.addSubtree(sameRankNode.value)
                     self.trees.remove(sameRankNode.value.value)
+                    self.parents[sameRankNode.value] = currNode.value
                 else:
                     sameRankNode.value.addSubtree(currNode.value)
                     currNode = self.trees.replaceWith(currNode.value,sameRankNode.value)
+                    self.parents[currNode.value] = sameRankNode.value
             else:
                 rankDict[rank] = currNode
                 currNode = currNode.next
@@ -73,6 +86,9 @@ class MinHeap:
     def addSubtree(self,subTree):
         self.children.append(subTree)
         self.rank = len(self.children)
+
+    def __hash__(self):
+        return id(self)
 
     def __eq__(self,obj):
         return isinstance(obj,MinHeap) and self.value == obj.value and self.children == obj.children and self.rank == obj.rank
