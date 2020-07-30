@@ -1,5 +1,6 @@
 # example code from a hackerrank problem that utilized namedtuple
 # this is being archived in my github so that I can remember how awesome this feature is
+# https://www.hackerrank.com/challenges/py-collections-namedtuple/
 
 from collections import namedtuple
 N = int(input())
