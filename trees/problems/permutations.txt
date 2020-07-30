@@ -1,0 +1,1 @@
+Given a list of cats, c, provide all possible groupings of cats.
